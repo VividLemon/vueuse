@@ -2,7 +2,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import type { MaybeRefOrGetter, Ref, ShallowRef } from 'vue'
 import { containsProp, toRef, until } from '@vueuse/shared'
 import axios, { AxiosError } from 'axios'
-import { computed, ref as deepRef, shallowRef, toValue, watch } from 'vue'
+import { computed, ref as deepRef, readonly, shallowRef, toValue, watch } from 'vue'
 
 export interface UseAxiosReturn<T, R = AxiosResponse<T>, _D = any, O extends UseAxiosOptions = UseAxiosOptions<T>> {
   /**
@@ -304,14 +304,14 @@ export function useAxios<T = any, R = AxiosResponse<T>, D = any>(...args: any[])
   }
 
   const result = {
-    response,
-    data,
-    error,
-    isFinished,
-    isLoading,
+    response: readonly(response),
+    data: readonly(data),
+    error: readonly(error),
+    isFinished: readonly(isFinished),
+    isLoading: readonly(isLoading),
     cancel: abort,
-    isAborted,
-    isCanceled: isAborted,
+    isAborted: readonly(isAborted),
+    isCanceled: readonly(isAborted),
     abort,
     execute,
   } as OverallUseAxiosReturn<T, R, D>
