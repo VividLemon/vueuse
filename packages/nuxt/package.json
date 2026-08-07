@@ -1,7 +1,7 @@
 {
   "name": "@vueuse/nuxt",
   "type": "module",
-  "version": "13.6.0",
+  "version": "14.4.0",
   "description": "VueUse Nuxt Module",
   "author": "Anthony Fu <https://github.com/antfu>",
   "license": "MIT",
@@ -24,24 +24,22 @@
   ],
   "sideEffects": false,
   "exports": {
-    ".": "./index.mjs",
-    "./*": "./*"
+    ".": "./dist/module.mjs",
+    "./module": "./dist/module.mjs",
+    "./package.json": "./package.json"
   },
-  "main": "./index.mjs",
-  "module": "./index.mjs",
-  "types": "./index.d.mts",
+  "main": "./dist/module.mjs",
+  "module": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
   "files": [
-    "*.d.mts",
-    "*.js",
-    "*.mjs"
+    "dist"
   ],
   "scripts": {
-    "build": "rollup --config=rollup.config.ts --configPlugin=rollup-plugin-esbuild",
-    "prepack": "pnpm run build",
-    "test:attw": "attw --pack --config-path ../../.attw.json ."
+    "build": "tsdown --config-loader unrun",
+    "prepack": "pnpm run build"
   },
   "peerDependencies": {
-    "nuxt": "^3.0.0 || ^4.0.0-0",
+    "nuxt": "^3.0.0 || ^4.0.0-0 || ^5.0.0-0",
     "vue": "^3.5.0"
   },
   "dependencies": {
@@ -53,6 +51,7 @@
   "devDependencies": {
     "@nuxt/schema": "catalog:integrations",
     "nuxt": "catalog:dev",
+    "tsdown": "catalog:dev",
     "unimport": "catalog:dev"
   }
 }

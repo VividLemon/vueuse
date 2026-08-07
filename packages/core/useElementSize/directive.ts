@@ -1,7 +1,7 @@
-import type { ObjectDirective } from 'vue'
-import type { ElementSize } from './index'
+import type { ElementSize } from '@vueuse/core'
+import { useElementSize } from '@vueuse/core'
+import { createDisposableDirective } from '@vueuse/shared'
 import { watch } from 'vue'
-import { useElementSize } from './index'
 
 type RemoveFirstFromTuple<T extends any[]>
   = T['length'] extends 0 ? undefined
@@ -11,15 +11,17 @@ type BindingValueFunction = (size: ElementSize) => void
 type VElementSizeOptions = RemoveFirstFromTuple<Parameters<typeof useElementSize>>
 type BindingValueArray = [BindingValueFunction, ...VElementSizeOptions]
 
-export const vElementSize: ObjectDirective<
+export const vElementSize = createDisposableDirective<
   HTMLElement,
   BindingValueFunction | BindingValueArray
-> = {
-  mounted(el, binding) {
-    const handler = typeof binding.value === 'function' ? binding.value : binding.value?.[0]
-    const options = (typeof binding.value === 'function' ? [] : binding.value.slice(1)) as RemoveFirstFromTuple<BindingValueArray>
+> (
+  {
+    mounted(el, binding) {
+      const handler = typeof binding.value === 'function' ? binding.value : binding.value?.[0]
+      const options = (typeof binding.value === 'function' ? [] : binding.value.slice(1)) as RemoveFirstFromTuple<BindingValueArray>
 
-    const { width, height } = useElementSize(el, ...options)
-    watch([width, height], ([width, height]) => handler({ width, height }))
+      const { width, height } = useElementSize(el, ...options)
+      watch([width, height], ([width, height]) => handler({ width, height }), { immediate: true })
+    },
   },
-}
+)
